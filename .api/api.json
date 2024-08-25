@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "esputnik-com",
+      "source": "@esputnik-com/v1.0#1ygjbof2xlztsagn4",
+      "integrity": "sha512-HuiQ6WGedVhL2K3A/pUvx4tHPfSbYHyOcAdHaGG6PUbILkt1ndGq7LclMbBoGoT0l0u01ETscldT4Yl6Rj1C7Q==",
+      "installerVersion": "6.1.2"
+    }
+  ]
+}
