@@ -8,9 +8,9 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
-const clients = {}; // Хранилище клиентов
+const clients = {};
 
-// Функция для упрощения клиента перед отправкой
+
 function simplifyClient(client) {
     return {
         id: client.id,
@@ -21,7 +21,7 @@ function simplifyClient(client) {
     };
 }
 
-// Регистрация клиента
+
 app.post('/api/register', (req, res) => {
     const { id, email } = req.body;
     if (clients[id]) {
@@ -30,16 +30,16 @@ app.post('/api/register', (req, res) => {
     const client = new Client(id, email);
     clients[id] = client;
 
-    // Запуск машины состояний для клиента
+
     const emailService = new EmailService();
     const stateMachine = new StateMachine(client, config.stateMachineTimeout, config.stateMachinePurchaseCount, emailService);
-    client.setStateMachine(stateMachine); // Устанавливаем машину состояний
+    client.setStateMachine(stateMachine);
     stateMachine.start();
 
     res.status(201).json({ message: 'Client registered', client: client.toJSON() });
 });
 
-// Совершение покупки
+
 app.post('/api/purchase', (req, res) => {
     const { id } = req.body;
     const client = clients[id];
@@ -52,7 +52,7 @@ app.post('/api/purchase', (req, res) => {
     res.status(200).json({ message: 'Purchase made', client: client.toJSON() });
 });
 
-// Запуск сервера
+
 app.listen(config.port, () => {
     console.log(`Server is running on http://localhost:${config.port}`);
 });

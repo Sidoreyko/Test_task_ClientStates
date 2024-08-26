@@ -1,26 +1,25 @@
 class StateMachine {
     constructor(client, t, n, emailService) {
         this.client = client;
-        this.t = t; // время ожидания в миллисекундах
-        this.n = n; // количество покупок для перехода в активное состояние
-        this.emailService = emailService; // Инъекция сервиса отправки email
+        this.t = t;
+        this.n = n;
+        this.emailService = emailService;
 
-        // Таймеры для каждого состояния
+
         this.timerLead = null;
         this.timerNewClients = null;
         this.timerActiveClients = null;
 
     }
 
-    // Запуск машины состояний
+
     start() {
         console.log(`Client ${this.client.id} now in LEAD STATE.`);
         this.checkState();
     }
 
-    // Проверка и обновление состояния клиента
     checkState() {
-        // Остановка предыдущих таймеров, если они были
+
         this.stopAllTimers();
 
         switch (this.client.state) {
@@ -44,33 +43,33 @@ class StateMachine {
         }
     }
 
-    // Обработка состояния lead
+
     handleLeadState() {
 
 
         if (this.client.purchaseCount > 0) {
             this.client.updateState('new_clients');
             this.client.purchaseCount = 0;
-            this.checkState(); // Проверяем новое состояние сразу
+            this.checkState();
             return;
         }
 
-        // Устанавливаем таймер на переход в 'sleep_leads' если нет покупок
+
         this.timerLead = setTimeout(() => {
             if (this.client.purchaseCount === 0) {
                 this.client.updateState('sleep_leads');
-                this.emailService.sendEmail(this.client.email, 'sleep'); // Использование emailService
+                this.emailService.sendEmail(this.client.email, 'sleep');
             }
             this.checkState();
         }, this.t);
     }
 
-    // Обработка состояния new_clients
+
     handleNewClientsState() {
         if (this.client.purchaseCount >= this.n) {
             this.client.updateState('active_clients');
             this.client.purchaseCount = 0;
-            this.checkState(); // Проверяем новое состояние сразу
+            this.checkState();
             return;
         }
 
@@ -85,7 +84,7 @@ class StateMachine {
         }, this.t);
     }
 
-    // Обработка состояния active_clients
+
     handleActiveClientsState() {
 
 
@@ -101,7 +100,7 @@ class StateMachine {
         }, this.t);
     }
 
-    // Обработка состояния need_reactivation_clients
+
     handleNeedReactivationClientsState() {
 
             if (this.client.purchaseCount >= this.n) {
@@ -112,13 +111,13 @@ class StateMachine {
 
     }
 
-    // Обработка состояния sleep_leads
+
     handleSleepLeadsState() {
         this.emailService.sendEmail(this.client.email, 'reminder_sleep');
         console.log(`Client ${this.client.id} remains in sleep_leads state.`);
     }
 
-    // Остановка всех таймеров
+
     stopAllTimers() {
         if (this.timerLead) {
             clearTimeout(this.timerLead);

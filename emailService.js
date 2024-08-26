@@ -3,8 +3,8 @@ const axios = require('axios');
 class EmailService {
     constructor() {
         this.apiUrl = 'https://esputnik.com/api/v1/message/email';
-        this.apiKey = process.env.ESPUTNIK_API_KEY; // API ключ, загружается из .env файла
-        this.senderEmail = 'sidoreyko@gmail.com'; // Укажите свой email
+        this.apiKey = process.env.ESPUTNIK_API_KEY;
+        this.senderEmail = 'sidoreyko@gmail.com';
     }
 
     async sendEmail(recipientEmail, textId) {
